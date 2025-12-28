@@ -1,50 +1,208 @@
-# Welcome to your Expo app 👋
+# Flickr Gallery App 📸
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A beautiful React Native/Expo app that displays recent images from Flickr with offline support and intelligent image caching.
 
-## Get started
+## ✨ Features
 
-1. Install dependencies
+- **Flickr Integration** - Displays 20 most recent photos from Flickr API in a 2-column grid
+- **Smart Caching** - Caches image URLs locally using AsyncStorage  
+- **Offline Support** - Shows cached images when offline with visual indicator
+- **Intelligent Updates** - Only updates cache when API response changes (Instagram-style behavior)
+- **Pull-to-Refresh** - Manually refresh to get latest images
+- **Dark/Light Theme** - Automatic theme detection
+- **Drawer Navigation** - Clean left sidebar with Home option
+- **Error Handling** - Graceful fallbacks and error messages
 
-   ```bash
-   npm install
-   ```
+## 🚀 Quick Start
 
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+### Installation
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Run
 
-## Learn more
+```bash
+npm start
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+Then:
+- Press `w` for web browser
+- Press `a` for Android emulator  
+- Press `i` for iOS simulator
+- Scan QR code with Expo Go app for mobile
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Direct Commands
 
-## Join the community
+```bash
+npm run web      # Web browser
+npm run android  # Android emulator
+npm run ios      # iOS simulator
+```
 
-Join our community of developers creating universal apps.
+## 📁 Project Structure
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```
+app/
+├── _layout.tsx        # Drawer navigation setup
+├── index.tsx          # Home screen route
+└── modal.tsx          # Modal screen
+
+components/
+├── home-screen.tsx    # Main gallery component with image grid
+└── ui/               # Reusable UI components
+
+services/
+└── flickrService.ts   # Flickr API & caching logic
+
+constants/
+└── theme.ts          # Color themes
+
+hooks/
+├── use-color-scheme.ts      # Theme detection
+├── use-color-scheme.web.ts  # Web theme detection
+└── use-theme-color.ts       # Theme color hook
+```
+
+## 🔧 Tech Stack
+
+- **Expo 54** - React Native framework
+- **Expo Router** - File-based routing
+- **AsyncStorage** - Local caching
+- **NetInfo** - Network detection
+- **Expo Image** - Image with caching
+- **React 19** - UI library
+- **TypeScript** - Type safety
+
+## 📱 Features in Detail
+
+### Image Caching System
+- First load: Fetches from Flickr API → stores in AsyncStorage
+- Subsequent loads: Uses cache → updates if API changes
+- Offline: Automatically shows cached data
+- Smart: Only re-renders if content actually changed
+
+### Offline Detection
+- Automatically detects internet status
+- Falls back to cache when offline
+- Shows "Showing Cached Images" indicator
+- Seamless switching between online/offline modes
+
+### Network Handling  
+- 10-second timeout for API requests
+- Automatic fallback to cache on timeout
+- Error messages for user feedback
+- Prevents app hanging on slow connections
+
+## 🎨 Customization
+
+### Change Flickr API Key
+Edit `services/flickrService.ts`:
+```typescript
+const FLICKR_API_URL = 'your-api-url';
+```
+
+### Grid Layout
+Edit `components/home-screen.tsx`:
+```typescript
+numColumns={2}  // Change grid columns
+```
+
+### Theme Colors
+Edit `constants/theme.ts` for custom colors
+
+## 📦 Dependencies
+
+- `@react-native-async-storage/async-storage` - Data caching
+- `@react-native-community/netinfo` - Network status
+- `expo-router` - Navigation
+- `expo-image` - Image loading with caching
+- `react-native-gesture-handler` - Gestures
+- `expo-vector-icons` - Icons
+
+## 🌐 Platform Support
+
+- ✅ Web (Chrome, Firefox, Safari, Edge)
+- ✅ Android 5.0+
+- ✅ iOS 13+
+- ✅ Expo Go
+
+## 📝 API Reference
+
+**Flickr API Used:**
+```
+GET https://api.flickr.com/services/rest/?method=flickr.photos.getRecent
+```
+
+Parameters:
+- `per_page=20` - 20 photos per request
+- `api_key` - Your Flickr API key
+- `extras=url_s` - Small URL for images
+
+## 🛠️ Scripts
+
+```bash
+npm start         # Development server
+npm run web       # Web version
+npm run android   # Android emulator
+npm run ios       # iOS simulator  
+npm run lint      # Code linting
+```
+
+## 💡 How It Works
+
+1. **On Launch:** 
+   - Checks internet connection
+   - Loads from cache if available
+   - Fetches fresh data from API if online
+
+2. **Caching:**
+   - Compares API response with cached version
+   - Only updates if data changed
+   - Prevents unnecessary re-renders
+
+3. **Offline:**
+   - Detects connection loss
+   - Shows cached images automatically
+   - Displays offline indicator
+
+4. **Refresh:**
+   - Pull-to-refresh gets latest data
+   - Updates cache if response changed
+
+## 🐛 Troubleshooting
+
+**Images not loading?**
+- Check internet connection
+- Verify Flickr API key is valid
+- Clear app cache: `AsyncStorage.clear()`
+
+**App crashes on startup?**
+- Clear node_modules: `rm -rf node_modules`
+- Reinstall: `npm install`
+- Clear Expo cache: `expo start --clear`
+
+**Offline mode not working?**
+- Ensure NetInfo is properly installed
+- Check that internet toggle is working
+- Restart app in offline mode
+
+## 📄 License
+
+MIT
+
+## 👤 Author
+
+Built for hiring submission - Demonstrates:
+- React Native expertise
+- State management with Hooks
+- Offline-first design patterns
+- API integration
+- Performance optimization
+- Clean code architecture
+
+---
+
+**Ready to use!** Just run `npm install && npm start` 🎉
+
